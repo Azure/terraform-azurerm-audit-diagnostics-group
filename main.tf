@@ -69,7 +69,3 @@ resource "azurerm_security_center_workspace" "sc_workspace" {
   scope        = "/subscriptions/${data.azurerm_subscription.current.subscription_id}"
   workspace_id = module.log_analytics.log_analytics_workspace.id
 }
-
-module "log_definition" {
-  source = "git@github.com:Nepomuceno/terraform-azurerm-monitoring-policies.git"
-}

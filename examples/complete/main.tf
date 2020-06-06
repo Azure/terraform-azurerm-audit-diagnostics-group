@@ -3,12 +3,16 @@ provider "azurerm" {
   features {}
 }
 
+locals {
+  unique_name_stub = substr(module.naming.unique-seed, 0, 5)
+}
+
 module "naming" {
   source = "git@github.com:Azure/terraform-azurerm-naming"
 }
 
 resource "azurerm_resource_group" "test_group" {
-  name     = "${module.naming.resource_group.slug}-audit-diagnostics-minimal-${substr(module.naming.unique-seed, 0, 5)}"
+  name     = "${module.naming.resource_group.slug}-audit-diagnostics-minimal-${local.unique_name_stub}"
   location = "uksouth"
 }
 
@@ -48,8 +52,8 @@ module "audit-diagnostics-group" {
   storage_account_private_endpoint_subnet_id = azurerm_subnet.diagnostics_subnet.id
   use_existing_resource_group                = false
   resource_group_location                    = azurerm_resource_group.test_group.location
-  prefix                                     = [substr(module.naming.unique-seed, 0, 5)]
-  suffix                                     = [substr(module.naming.unique-seed, 0, 5)]
+  prefix                                     = [local.unique_name_stub]
+  suffix                                     = [local.unique_name_stub]
   event_hub_namespace_sku                    = "Standard"
   event_hub_namespace_capacity               = "1"
   event_hubs = {
