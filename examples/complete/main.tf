@@ -48,7 +48,7 @@ resource "azurerm_key_vault" "key_vault" {
 }
 
 module "audit-diagnostics-group" {
-  source                                     = "../"
+  source                                     = "../../"
   storage_account_private_endpoint_subnet_id = azurerm_subnet.diagnostics_subnet.id
   use_existing_resource_group                = false
   resource_group_location                    = azurerm_resource_group.test_group.location

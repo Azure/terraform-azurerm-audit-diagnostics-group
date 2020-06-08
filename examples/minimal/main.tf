@@ -7,8 +7,12 @@ module "naming" {
   source = "git@github.com:Azure/terraform-azurerm-naming"
 }
 
+locals {
+  unique_name_stub = substr(module.naming.unique-seed, 0, 5)
+}
+
 resource "azurerm_resource_group" "test_group" {
-  name     = "${module.naming.resource_group.slug}-audit-diagnostics-minimal-${substr(module.naming.unique-seed, 0, 5)}"
+  name     = "${module.naming.resource_group.slug}-audit-diagnostics-minimal-${local.unique_name_stub}"
   location = "uksouth"
 }
 
@@ -28,7 +32,7 @@ resource "azurerm_subnet" "diagnostics_subnet" {
 }
 
 module "audit-diagnostics-group" {
-  source                                     = "../"
+  source                                     = "../../"
   storage_account_private_endpoint_subnet_id = azurerm_subnet.diagnostics_subnet.id
   use_existing_resource_group                = false
   resource_group_location                    = azurerm_resource_group.test_group.location

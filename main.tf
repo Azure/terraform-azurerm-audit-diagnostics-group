@@ -9,7 +9,7 @@ locals {
 }
 
 module "naming" {
-  source = "git@github.com:Azure/terraform-azurerm-naming"
+  source = "git::https://github.com/Azure/terraform-azurerm-naming"
   suffix = local.suffix
   prefix = local.prefix
 }
@@ -21,7 +21,7 @@ resource "azurerm_resource_group" "audit_diagnostics_group" {
 }
 
 module "log_analytics" {
-  source                                = "git@github.com:Azure/terraform-azurerm-sec-log-analytics"
+  source                                = "git::https://github.com/Azure/terraform-azurerm-sec-log-analytics"
   resource_group_name                   = data.azurerm_resource_group.current.name
   prefix                                = local.prefix
   suffix                                = local.suffix
@@ -32,7 +32,7 @@ module "log_analytics" {
 }
 
 module "event_hub" {
-  source              = "git@github.com:Azure/terraform-azurerm-sec-event-hub"
+  source              = "git::https://github.com/Azure/terraform-azurerm-sec-event-hub"
   resource_group_name = data.azurerm_resource_group.current.name
   prefix              = local.prefix
   suffix              = local.suffix
@@ -42,7 +42,7 @@ module "event_hub" {
 }
 
 module "storage_account" {
-  source                               = "git@github.com:Azure/terraform-azurerm-sec-storage-account"
+  source                               = "git::https://github.com/Azure/terraform-azurerm-sec-storage-account"
   resource_group_name                  = data.azurerm_resource_group.current.name
   storage_account_name                 = module.naming.storage_account.name_unique
   storage_account_replication_type     = var.storage_account_replication_type

@@ -36,7 +36,6 @@ variable "suffix" {
   default     = []
 }
 
-
 #Event Hub Optional Variables
 variable "event_hub_namespace_sku" {
   type        = string
