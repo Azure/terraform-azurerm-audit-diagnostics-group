@@ -12,7 +12,7 @@ module "naming" {
 }
 
 resource "azurerm_resource_group" "test_group" {
-  name     = "${module.naming.resource_group.slug}-audit-diagnostics-minimal-${local.unique_name_stub}"
+  name     = "${module.naming.resource_group.slug}-audit-diagnostics-max-${local.unique_name_stub}"
   location = "uksouth"
 }
 
@@ -24,27 +24,12 @@ resource "azurerm_virtual_network" "diagnostics_virtual_network" {
 }
 
 resource "azurerm_subnet" "diagnostics_subnet" {
-  name                 = module.naming.subnet.name
-  resource_group_name  = azurerm_resource_group.test_group.name
-  virtual_network_name = azurerm_virtual_network.diagnostics_virtual_network.name
-  address_prefix       = "10.0.0.0/24"
-  service_endpoints    = ["Microsoft.Storage"]
-}
-
-resource "azurerm_key_vault" "key_vault" {
-  name                     = module.naming.key_vault.name
-  location                 = azurerm_resource_group.test_group.location
-  resource_group_name      = azurerm_resource_group.test_group.name
-  tenant_id                = data.azurerm_subscription.current.tenant_id
-  purge_protection_enabled = true
-  soft_delete_enabled      = true
-  network_acls {
-    default_action             = "Deny"
-    bypass                     = "AzureServices"
-    ip_rules                   = [data.external.test_client_ip.result.ip]
-    virtual_network_subnet_ids = [azurerm_subnet.diagnostics_subnet.id]
-  }
-  sku_name = "standard"
+  name                                           = module.naming.subnet.name
+  resource_group_name                            = azurerm_resource_group.test_group.name
+  virtual_network_name                           = azurerm_virtual_network.diagnostics_virtual_network.name
+  address_prefix                                 = "10.0.0.0/24"
+  service_endpoints                              = ["Microsoft.Storage"]
+  enforce_private_link_endpoint_network_policies = true
 }
 
 module "audit-diagnostics-group" {
@@ -73,7 +58,7 @@ module "audit-diagnostics-group" {
   }
   log_analytics_workspace_sku           = "PerGB2018"
   log_analytics_retention_in_days       = 730
-  automation_account_alternate_location = azurerm_resource_group.test_group.name
+  automation_account_alternate_location = azurerm_resource_group.test_group.location
   automation_account_sku                = "Basic"
   storage_account_name                  = module.naming.storage_account.name_unique
   storage_account_tier                  = "Standard"

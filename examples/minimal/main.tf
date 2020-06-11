@@ -12,7 +12,7 @@ locals {
 }
 
 resource "azurerm_resource_group" "test_group" {
-  name     = "${module.naming.resource_group.slug}-audit-diagnostics-minimal-${local.unique_name_stub}"
+  name     = "${module.naming.resource_group.slug}-audit-diagnostics-min-${local.unique_name_stub}"
   location = "uksouth"
 }
 
@@ -24,11 +24,12 @@ resource "azurerm_virtual_network" "diagnostics_virtual_network" {
 }
 
 resource "azurerm_subnet" "diagnostics_subnet" {
-  name                 = module.naming.subnet.name
-  resource_group_name  = azurerm_resource_group.test_group.name
-  virtual_network_name = azurerm_virtual_network.diagnostics_virtual_network.name
-  address_prefix       = "10.0.0.0/24"
-  service_endpoints    = ["Microsoft.Storage"]
+  name                                           = module.naming.subnet.name
+  resource_group_name                            = azurerm_resource_group.test_group.name
+  virtual_network_name                           = azurerm_virtual_network.diagnostics_virtual_network.name
+  address_prefix                                 = "10.0.0.0/24"
+  service_endpoints                              = ["Microsoft.Storage"]
+  enforce_private_link_endpoint_network_policies = true
 }
 
 module "audit-diagnostics-group" {
