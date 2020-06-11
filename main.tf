@@ -69,3 +69,7 @@ resource "azurerm_security_center_workspace" "sc_workspace" {
   scope        = "/subscriptions/${data.azurerm_subscription.current.subscription_id}"
   workspace_id = module.log_analytics.log_analytics_workspace.id
 }
+
+resource "azurerm_security_center_subscription_pricing" "sc_sub_pricing" {
+  tier = "Standard"
+}
