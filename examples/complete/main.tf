@@ -43,12 +43,12 @@ module "audit-diagnostics-group" {
   event_hub_namespace_capacity               = "1"
   event_hubs = {
     "eh-default" = {
-      name              = module.naming.event_hub.name
+      name              = module.naming.eventhub.name
       partition_count   = 1
       message_retention = 1
       authorisation_rules = {
         "ehra-default" = {
-          name   = module.naming.event_hub_authorization_rule.name
+          name   = module.naming.eventhub_authorization_rule.name
           listen = true
           send   = false
           manage = false
