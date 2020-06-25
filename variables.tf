@@ -141,5 +141,6 @@ variable "bypass_internal_network_rules" {
   default     = true
 }
 
-
-
+variable "module_depends_on" {
+  default = [""]
+}
