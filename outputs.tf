@@ -17,3 +17,7 @@ output "event_hubs" {
 output "storage_account" {
   value = module.storage_account.storage_account
 }
+
+output "automation_account" {
+  value = module.log_analytics.automation_account
+}
