@@ -25,3 +25,7 @@ output "automation_account" {
 output "private_endpoint" {
   value = azurerm_private_endpoint.private_endpoint
 }
+
+output "private_dns_zone" {
+  value = azurerm_private_dns_zone.blob_dns_zone
+}

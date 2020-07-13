@@ -22,3 +22,6 @@ output "private_endpoint" {
   value = module.audit-diagnostics-group.private_endpoint
 }
 
+output "private_dns_zone" {
+  value = module.audit-diagnostics-group.private_dns_zone
+}

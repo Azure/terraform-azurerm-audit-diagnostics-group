@@ -53,11 +53,23 @@ module "storage_account" {
   module_depends_on = [null_resource.module_depends_on]
 }
 
+resource "azurerm_private_dns_zone" "blob_dns_zone" {
+  name                = "privatelink.blob.core.windows.net"
+  resource_group_name = data.azurerm_resource_group.current.name
+
+  depends_on = [null_resource.module_depends_on]
+}
+
 resource "azurerm_private_endpoint" "private_endpoint" {
   name                = module.naming.private_endpoint.name
   location            = data.azurerm_resource_group.current.location
   resource_group_name = data.azurerm_resource_group.current.name
   subnet_id           = var.storage_account_private_endpoint_subnet_id
+
+  private_dns_zone_group {
+    name                 = "blob-dns-zone-group"
+    private_dns_zone_ids = [azurerm_private_dns_zone.blob_dns_zone.id]
+  }
 
   private_service_connection {
     name                           = module.naming.private_service_connection.name
