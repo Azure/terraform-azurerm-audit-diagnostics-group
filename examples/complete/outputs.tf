@@ -17,3 +17,8 @@ output "event_hubs" {
 output "storage_account" {
   value = module.audit-diagnostics-group.storage_account
 }
+
+output "private_endpoint" {
+  value = module.audit-diagnostics-group.private_endpoint
+}
+

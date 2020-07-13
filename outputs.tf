@@ -21,3 +21,7 @@ output "storage_account" {
 output "automation_account" {
   value = module.log_analytics.automation_account
 }
+
+output "private_endpoint" {
+  value = azurerm_private_endpoint.private_endpoint
+}
