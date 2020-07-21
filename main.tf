@@ -32,13 +32,14 @@ module "log_analytics" {
 }
 
 module "event_hub" {
-  source              = "git::https://github.com/Azure/terraform-azurerm-sec-event-hub"
-  resource_group_name = data.azurerm_resource_group.current.name
-  prefix              = local.prefix
-  suffix              = local.suffix
-  sku                 = var.event_hub_namespace_sku
-  capacity            = var.event_hub_namespace_capacity
-  event_hubs          = var.event_hubs
+  source                  = "git::https://github.com/Azure/terraform-azurerm-sec-event-hub"
+  resource_group_name     = data.azurerm_resource_group.current.name
+  resource_group_location = data.azurerm_resource_group.current.location
+  prefix                  = local.prefix
+  suffix                  = local.suffix
+  sku                     = var.event_hub_namespace_sku
+  capacity                = var.event_hub_namespace_capacity
+  event_hubs              = var.event_hubs
 }
 
 module "storage_account" {
