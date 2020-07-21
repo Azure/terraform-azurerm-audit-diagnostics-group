@@ -46,6 +46,7 @@ module "event_hub" {
 module "storage_account" {
   source                               = "git::https://github.com/Azure/terraform-azurerm-sec-storage-account"
   resource_group_name                  = local.resource_group.name
+  resource_group_location              = local.resource_group.location
   storage_account_name                 = module.naming.storage_account.name_unique
   storage_account_replication_type     = var.storage_account_replication_type
   allowed_ip_ranges                    = var.allowed_ip_ranges
