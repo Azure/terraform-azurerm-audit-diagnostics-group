@@ -42,7 +42,7 @@ module "event_hub" {
 }
 
 module "storage_account" {
-  source                               = "git::https://github.com/Azure/terraform-azurerm-sec-storage-account"
+  source                               = "git::https://github.com/jjcollinge/terraform-azurerm-sec-storage-account?ref=jjcollinge-patch-1"
   resource_group_name                  = data.azurerm_resource_group.current.name
   storage_account_name                 = module.naming.storage_account.name_unique
   storage_account_replication_type     = var.storage_account_replication_type
