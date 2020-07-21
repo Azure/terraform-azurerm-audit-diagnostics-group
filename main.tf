@@ -5,7 +5,7 @@ provider "azurerm" {
 locals {
   prefix              = var.prefix
   suffix              = concat(["diag"], var.suffix)
-  resource_group_name = var.use_existing_resource_group ? var.resource_group_name : azurerm_resource_group.audit_diagnostics_group[0].name
+  resource_group      = var.use_existing_resource_group ? data.azurerm_resource_group.current[0] : azurerm_resource_group.audit_diagnostics_group[0]
 }
 
 module "naming" {
@@ -22,7 +22,8 @@ resource "azurerm_resource_group" "audit_diagnostics_group" {
 
 module "log_analytics" {
   source                                = "git::https://github.com/Azure/terraform-azurerm-sec-log-analytics"
-  resource_group_name                   = data.azurerm_resource_group.current.name
+  resource_group_name                   = local.resource_group.name
+  resource_group_location               = local.resource_group.location
   prefix                                = local.prefix
   suffix                                = local.suffix
   log_analytics_workspace_sku           = var.log_analytics_workspace_sku
@@ -32,18 +33,20 @@ module "log_analytics" {
 }
 
 module "event_hub" {
-  source              = "git::https://github.com/Azure/terraform-azurerm-sec-event-hub"
-  resource_group_name = data.azurerm_resource_group.current.name
-  prefix              = local.prefix
-  suffix              = local.suffix
-  sku                 = var.event_hub_namespace_sku
-  capacity            = var.event_hub_namespace_capacity
-  event_hubs          = var.event_hubs
+  source                  = "git::https://github.com/Azure/terraform-azurerm-sec-event-hub"
+  resource_group_name     = local.resource_group.name
+  resource_group_location = local.resource_group.location
+  prefix                  = local.prefix
+  suffix                  = local.suffix
+  sku                     = var.event_hub_namespace_sku
+  capacity                = var.event_hub_namespace_capacity
+  event_hubs              = var.event_hubs
 }
 
 module "storage_account" {
   source                               = "git::https://github.com/Azure/terraform-azurerm-sec-storage-account"
-  resource_group_name                  = data.azurerm_resource_group.current.name
+  resource_group_name                  = local.resource_group.name
+  resource_group_location              = local.resource_group.location
   storage_account_name                 = module.naming.storage_account.name_unique
   storage_account_replication_type     = var.storage_account_replication_type
   allowed_ip_ranges                    = var.allowed_ip_ranges
@@ -55,15 +58,15 @@ module "storage_account" {
 
 resource "azurerm_private_dns_zone" "blob_dns_zone" {
   name                = "privatelink.blob.core.windows.net"
-  resource_group_name = data.azurerm_resource_group.current.name
+  resource_group_name = local.resource_group.name
 
   depends_on = [null_resource.module_depends_on]
 }
 
 resource "azurerm_private_endpoint" "private_endpoint" {
   name                = module.naming.private_endpoint.name
-  location            = data.azurerm_resource_group.current.location
-  resource_group_name = data.azurerm_resource_group.current.name
+  location            = local.resource_group.location
+  resource_group_name = local.resource_group.name
   subnet_id           = var.storage_account_private_endpoint_subnet_id
 
   private_dns_zone_group {
