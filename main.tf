@@ -23,6 +23,7 @@ resource "azurerm_resource_group" "audit_diagnostics_group" {
 module "log_analytics" {
   source                                = "git::https://github.com/Azure/terraform-azurerm-sec-log-analytics"
   resource_group_name                   = local.resource_group.name
+  resource_group_location               = local.resource_group.location
   prefix                                = local.prefix
   suffix                                = local.suffix
   log_analytics_workspace_sku           = var.log_analytics_workspace_sku
