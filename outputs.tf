@@ -1,5 +1,5 @@
 output "resource_group" {
-  value = data.azurerm_resource_group.current
+  value = local.resource_group
 }
 
 output "log_analytics_workspace" {
