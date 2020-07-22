@@ -140,7 +140,3 @@ variable "bypass_internal_network_rules" {
   description = "Bypass internal traffic to enable metrics and logging."
   default     = true
 }
-
-variable "module_depends_on" {
-  default = [""]
-}

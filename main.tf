@@ -52,15 +52,11 @@ module "storage_account" {
   allowed_ip_ranges                    = var.allowed_ip_ranges
   permitted_virtual_network_subnet_ids = var.permitted_virtual_network_subnet_ids
   bypass_internal_network_rules        = var.bypass_internal_network_rules
-
-  module_depends_on = [null_resource.module_depends_on]
 }
 
 resource "azurerm_private_dns_zone" "blob_dns_zone" {
   name                = "privatelink.blob.core.windows.net"
   resource_group_name = local.resource_group.name
-
-  depends_on = [null_resource.module_depends_on]
 }
 
 resource "azurerm_private_endpoint" "private_endpoint" {
@@ -80,8 +76,6 @@ resource "azurerm_private_endpoint" "private_endpoint" {
     private_connection_resource_id = module.storage_account.storage_account.id
     is_manual_connection           = false
   }
-
-  depends_on = [null_resource.module_depends_on]
 }
 
 /* resource "azurerm_security_center_workspace" "sc_workspace" {
@@ -92,9 +86,3 @@ resource "azurerm_private_endpoint" "private_endpoint" {
 resource "azurerm_security_center_subscription_pricing" "sc_sub_pricing" {
   tier = "Standard"
 } */
-
-resource "null_resource" "module_depends_on" {
-  triggers = {
-    value = length(var.module_depends_on)
-  }
-}
